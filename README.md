@@ -64,6 +64,12 @@ Pull updated images and restart affected containers:
 podman auto-update
 ```
 
+You can clean up dangling images after updated images are pulled:
+
+```bash
+podman image prune -f
+```
+
 ## Decommission / Unstow
 
 If you need to tear down the environment, pull back the symlinks, or clean up the host paths, follow this order to prevent orphaned systemd services:
@@ -82,3 +88,17 @@ If you need to tear down the environment, pull back the symlinks, or clean up th
    ```bash
    systemctl --user daemon-reload
    ```
+
+4. Finally, you can remove the installed container images.
+
+Check what is installed with:
+
+```bash
+podman images
+```
+
+Remove with:
+
+```bash
+podman image rm <image_hash>
+```
