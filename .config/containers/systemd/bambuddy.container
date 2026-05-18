@@ -1,0 +1,24 @@
+[Unit]
+Description=Bambuddy for Raspberry Pi
+After=network-online.target
+
+[Container]
+# The image supports arm64 automatically
+Image=ghcr.io/maziggy/bambuddy:latest
+ContainerName=bambuddy
+
+# Host networking is highly recommended for printer discovery (SSDP)
+Network=host
+
+# Persistent storage
+Volume=%h/bambuddy/data:/app/data:Z
+Volume=%h/bambuddy/logs:/app/logs:Z
+
+Environment=TZ=America/Chicago
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

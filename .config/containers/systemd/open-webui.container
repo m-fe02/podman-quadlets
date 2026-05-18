@@ -1,0 +1,16 @@
+[Unit]
+Description=Open WebUI Container
+After=network-online.target
+
+[Container]
+Image=ghcr.io/open-webui/open-webui:main
+ContainerName=open-webui
+# Bypasses internal container networking to talk to Ollama directly
+Network=host
+Environment=OLLAMA_BASE_URL=http://127.0.0.1:11434
+# Stores your chats and settings persistently
+Volume=open-webui:/app/backend/data
+AutoUpdate=registry
+
+[Install]
+WantedBy=default.target

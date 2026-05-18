@@ -1,0 +1,16 @@
+[Unit]
+Description=SearXNG Service
+After=network-online.target
+
+[Container]
+Image=docker.io/searxng/searxng:latest
+ContainerName=searxng
+Network=host
+# This changes the internal port to 8081 to avoid conflict with WebUI
+Environment=SEARXNG_PORT=8081
+Environment=SEARXNG_SETTINGS_PATH=/etc/searxng/settings.yml
+Volume=searxng_data:/etc/searxng
+AutoUpdate=registry
+
+[Install]
+WantedBy=default.target
