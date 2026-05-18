@@ -2,6 +2,10 @@
 
 This repository contains my personal, rootless Podman Quadlet configurations managed as Infrastructure as Code (IaC). It allows for identical, reproducible container deployments across multiple machines using GNU Stow and systemd.
 
+## Prerequisites
+
+Install `podman` and `stow` using your preferred package manager before proceeding.
+
 ## Infrastructure Architecture
 
 The repository mirrors the expected user config structure, allowing GNU Stow to symlink configuration files directly into place.
