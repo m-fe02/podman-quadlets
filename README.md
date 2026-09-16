@@ -14,8 +14,6 @@ Each service lives in its own top-level directory, acting as an independent GNU 
 podman-quadlets/
 ├── bambuddy
 │   └── .config/containers/systemd/bambuddy.container
-├── ollama
-│   └── .config/containers/systemd/ollama.container
 ├── open-webui
 │   └── .config/containers/systemd/open-webui.container
 └── searxng
@@ -24,11 +22,11 @@ podman-quadlets/
 
 This modular layout lets you stow (or unstow) individual services independently, so a machine can run just the containers it needs.
 
-**Data Volumes:** Named Podman volumes (`open-webui`, `searxng_data`) and user-space bind mounts (`~/bambuddy`, `~/.local/share/ollama`) are automatically initialized by Podman on first boot—no manual creation required.
+**Data Volumes:** Named Podman volumes (`open-webui`, `searxng_data`) and user-space bind mounts (`~/bambuddy`) are automatically initialized by Podman on first boot—no manual creation required.
 
-**Networking:** Uses native host networking flags where appropriate for seamless local service interaction and device discovery. `ollama` additionally passes through AMD ROCm GPU devices for hardware-accelerated inference.
+**Networking:** Uses native host networking flags where appropriate for seamless local service interaction and device discovery.
 
-**Updates:** `bambuddy`, `open-webui`, and `searxng` are configured with `AutoUpdate=registry` to integrate with systemd auto-update timers. `ollama` is pinned manually since it tracks a specific ROCm-tagged image.
+**Updates:** Containers are configured with `AutoUpdate=registry` to integrate with systemd auto-update timers.
 
 ## Deployment with GNU Stow
 
@@ -41,9 +39,9 @@ To deploy these rootless Quadlets onto a fresh machine, execute the following st
 
 2. **Symlink the configuration** into your home directory, naming the packages (services) you want on this machine:
    ```bash
-   stow -d ~/Projects/podman-quadlets -t ~ bambuddy ollama open-webui searxng
+   stow -d ~/Projects/podman-quadlets -t ~ bambuddy open-webui searxng
    ```
-   Omit any package you don't need on a given machine—for example, skip `ollama` on a host without a compatible GPU.
+   Omit any package you don't need on a given machine.
 
 3. Force systemd to parse the newly linked Quadlet files and generate transient service units:
    ```bash
@@ -52,7 +50,7 @@ To deploy these rootless Quadlets onto a fresh machine, execute the following st
 
 4. **Enable and start** the generated container services simultaneously:
    ```bash
-   systemctl --user enable --now open-webui.service searxng.service bambuddy.service ollama.service
+   systemctl --user enable --now open-webui.service searxng.service bambuddy.service
    ```
 
 ## Keeping Containers Up to Date
@@ -81,12 +79,12 @@ If you need to tear down the environment, pull back the symlinks, or clean up th
 
 1. Stop and disable the active container services:
    ```bash
-   systemctl --user disable --now open-webui.service searxng.service bambuddy.service ollama.service
+   systemctl --user disable --now open-webui.service searxng.service bambuddy.service
    ```
 
 2. Remove the symlinks from your home directory using Stow's delete flag, naming the same packages you stowed:
    ```bash
-   stow -d ~/Projects/podman-quadlets -t ~ -D bambuddy ollama open-webui searxng
+   stow -d ~/Projects/podman-quadlets -t ~ -D bambuddy open-webui searxng
    ```
 
 3. **Reload systemd** to clear out the generated transient service definitions:
