@@ -1,0 +1,26 @@
+[Unit]
+Description=Ollama AI Service (AMD ROCm)
+After=network-online.target
+
+[Container]
+Image=ollama/ollama:rocm
+ContainerName=ollama
+PublishPort=11434:11434
+
+# Persistent storage for downloaded models
+Volume=%h/.local/share/ollama:/root/.ollama:Z
+
+# Pass AMD GPU and ROCm compute devices
+Device=/dev/kfd
+Device=/dev/dri/renderD128
+Device=/dev/dri/card0
+
+# Ryzen AI 300 Series (Strix Point / gfx1150) ROCm override
+Environment=HSA_OVERRIDE_GFX_VERSION=11.5.0
+
+[Service]
+Restart=always
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
