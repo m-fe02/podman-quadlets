@@ -32,16 +32,17 @@ This modular layout lets you stow (or unstow) individual services independently,
 
 To deploy these rootless Quadlets onto a fresh machine, execute the following steps:
 
-1. Clone the repository to your central projects or dotfiles directory:
+1. Clone the repository to your central projects or dotfiles directory, then move into it:
    ```bash
    git clone git@github.com:m-fe02/podman-quadlets.git ~/Projects/podman-quadlets
+   cd ~/Projects/podman-quadlets
    ```
 
 2. **Symlink the configuration** into your home directory, naming the packages (services) you want on this machine:
    ```bash
-   stow -d ~/Projects/podman-quadlets -t ~ bambuddy open-webui searxng
+   stow --no-folding -t ~ bambuddy open-webui searxng
    ```
-   Omit any package you don't need on a given machine.
+   Omit any package you don't need on a given machine. `--no-folding` keeps Stow from collapsing the shared `.config/containers/systemd` directory into a single symlink, which would conflict once you stow a second package into it.
 
 3. Force systemd to parse the newly linked Quadlet files and generate transient service units:
    ```bash
@@ -82,9 +83,9 @@ If you need to tear down the environment, pull back the symlinks, or clean up th
    systemctl --user disable --now open-webui.service searxng.service bambuddy.service
    ```
 
-2. Remove the symlinks from your home directory using Stow's delete flag, naming the same packages you stowed:
+2. Remove the symlinks from your home directory using Stow's delete flag, naming the same packages you stowed (run from `~/Projects/podman-quadlets`):
    ```bash
-   stow -d ~/Projects/podman-quadlets -t ~ -D bambuddy open-webui searxng
+   stow --no-folding -t ~ -D bambuddy open-webui searxng
    ```
 
 3. **Reload systemd** to clear out the generated transient service definitions:
